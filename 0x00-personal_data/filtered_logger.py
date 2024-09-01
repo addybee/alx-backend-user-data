@@ -61,6 +61,7 @@ def get_logger() -> logging.Logger:
 
     # Add the handler to the logger
     logger.addHandler(file_handler)
+    logger.propagate = False
 
     return logger
 
