@@ -8,7 +8,7 @@ import os
 from mysql.connector import Error
 import mysql.connector
 
-PII_FIELDS = ('email', 'phone', 'ssn', 'password', 'ip')
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 class RedactingFormatter(logging.Formatter):
@@ -50,19 +50,19 @@ def get_logger() -> logging.Logger:
     Returns:
         logging.Logger: Configured logger instance.
     """
-    user_data = logging.getLogger(__name__)
-    user_data.setLevel(logging.INFO)
+    logger = logging.getLogger('user_data')
+    logger.setLevel(logging.INFO)
 
     # Create a stream handler
     file_handler = logging.StreamHandler()
 
     # Set the formatter for the handler
-    file_handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    file_handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
 
     # Add the handler to the logger
-    user_data.addHandler(file_handler)
+    logger.addHandler(file_handler)
 
-    return user_data
+    return logger
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
