@@ -23,7 +23,12 @@ elif os.getenv('AUTH_TYPE') == 'auth':
 
 @app.before_request
 def before_request() -> None:
-    """"""
+    """Executes actions before processing a request.
+
+    If authentication is required for the requested path, checks for
+    authorization header and current user. Aborts with 401 if authorization
+    header is missing, and 403 if current user is not found.
+    """
     if auth is None:
         return
     if auth.require_auth(request.path,
