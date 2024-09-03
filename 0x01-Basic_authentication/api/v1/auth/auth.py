@@ -4,6 +4,7 @@
 """
 from flask import request
 from typing import List, TypeVar
+import re
 
 
 class Auth:
@@ -36,7 +37,7 @@ class Auth:
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Check if authentication is required for the given path.
 
-            Args:
+        Args:
             path (str): The path to check for authentication requirement.
             excluded_paths (List[str]): List of paths excluded
                                         from authentication.
@@ -48,8 +49,13 @@ class Auth:
             return True
         if not path.endswith('/'):
             path += '/'
-        if path in excluded_paths:
-            return False
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith('*'):
+                if re.match(re.escape(excluded_path[:-1]), path):
+                    return False
+            elif excluded_path == path:
+                return False
+
         return True
 
     def authorization_header(self, request=None) -> str:
