@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""API Authentication manager module"""
+"""
+    API Authentication manager module
+"""
 from flask import request
 from typing import List, TypeVar
 
 
 class Auth:
-    """Authentication Class Manager"""
+    """
+        Authentication Class Manager
+    """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Check if authentication is required for the given path.
 
