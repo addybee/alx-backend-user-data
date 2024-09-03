@@ -8,7 +8,30 @@ from typing import List, TypeVar
 
 class Auth:
     """
-        Authentication Class Manager
+    Authentication Class Manager
+
+    Check if authentication is required for the given path.
+
+    Args:
+        path (str): The path to check for authentication requirement.
+        excluded_paths (List[str]): List of paths excluded
+                                    from authentication.
+
+    Returns:
+        bool: True if authentication is required, False if not.
+
+    Return the Authorization header value from the request.
+
+    Args:
+        request: The request object containing headers.
+
+    Returns:
+        str: Value of the Authorization header, or None if not present.
+
+    gets the current logged in user
+
+    Return:
+    - the current user
     """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Check if authentication is required for the given path.
