@@ -24,15 +24,14 @@ elif os.getenv('AUTH_TYPE') == 'auth':
 @app.before_request
 def before_request() -> None:
     """"""
-    if auth is None or\
-        not auth.require_auth(request.path,
-                              ['/api/v1/status/',
-                               '/api/v1/unauthorized/',
-                               '/api/v1/forbidden/'
-                               ]
-                              ):
+    if auth is None:
         return
-    else:
+    if auth.require_auth(request.path,
+                         ['/api/v1/status/',
+                          '/api/v1/unauthorized/',
+                          '/api/v1/forbidden/'
+                          ]
+                         ):
         if not auth.authorization_header(request):
             abort(401)
         if not auth.current_user(request):
