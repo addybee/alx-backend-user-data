@@ -22,6 +22,12 @@ elif os.getenv('AUTH_TYPE') == 'auth':
 elif os.getenv('AUTH_TYPE') == 'session_auth':
     from api.v1.auth.session_auth import SessionAuth
     auth = SessionAuth()
+elif os.getenv('AUTH_TYPE') == 'session_exp_auth':
+    from api.v1.auth.session_exp_auth import SessionExpAuth
+    auth = SessionExpAuth()
+elif os.getenv('AUTH_TYPE') == 'session_db_auth':
+    from api.v1.auth.session_db_auth import SessionDBAuth
+    auth = SessionDBAuth()
 
 
 @app.before_request
@@ -43,6 +49,7 @@ def before_request() -> None:
                          ):
         if not auth.authorization_header(request) and \
                 not auth.session_cookie(request):
+            print(f'am in b4 req')
             abort(401)
         current_user = auth.current_user(request)
         if not current_user:

@@ -28,7 +28,7 @@ def login() -> str:
         response = make_response(jsonify(users[0].to_json()))
         response.set_cookie(getenv('SESSION_NAME'), sesion_id)
         return response
-    except Exception:
+    except Exception as e:
         return jsonify({"error": "no user found for this email"}), 404
 
 
