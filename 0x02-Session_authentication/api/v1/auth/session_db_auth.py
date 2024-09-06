@@ -20,6 +20,8 @@ class SessionDBAuth(SessionExpAuth):
         creates a Session ID for a user_id
         """
         session_id = super().create_session(user_id)
+        if not session_id:
+            return None
         user_session = UserSession(user_id=user_id, session_id=session_id)
         user_session.save()
         return session_id
