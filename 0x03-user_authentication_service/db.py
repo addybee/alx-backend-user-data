@@ -5,6 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 # from typing import TypeVar
 
 from user import Base, User
@@ -13,6 +14,7 @@ from user import Base, User
 class DB:
     """DB class
     """
+    __keys = ['id', 'email', 'hashed_password', 'session_id', 'reset_token']
 
     def __init__(self) -> None:
         """Initialize a new DB instance
@@ -44,6 +46,9 @@ class DB:
         """ finds a user base on the given parameters """
         if self.__session is None:
             self._session
+        for key in kwargs.keys():
+            if key not in self.__keys:
+                raise InvalidRequestError
         query = self.__session.query(User).filter_by(**kwargs)
         user = query.first()
         if user is None:
@@ -56,9 +61,7 @@ class DB:
             self._session
         user = self.find_user_by(id=user_id)
         for key, val in kwargs.items():
-            keys = ['id', 'email', 'hashed_password', 'session_id',
-                    'reset_token']
-            if key not in keys:
+            if key not in self.__keys:
                 raise ValueError
             setattr(user, key, val)
         self.__session.commit()
