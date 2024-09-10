@@ -46,9 +46,11 @@ class DB:
         """ finds a user base on the given parameters """
         if self.__session is None:
             self._session
+
         for key in kwargs.keys():
             if key not in self.__keys:
                 raise InvalidRequestError
+
         query = self.__session.query(User).filter_by(**kwargs)
         user = query.first()
         if user is None:

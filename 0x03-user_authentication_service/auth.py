@@ -56,3 +56,46 @@ class Auth:
 
         except Exception:
             return None
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """ finds a user by session id"""
+        if session_id is None:
+            return None
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except Exception:
+            return None
+
+    def destroy_session(self, user_id: int) -> None:
+        """destroys a user current session"""
+        if user_id is None:
+            return None
+        try:
+            user = self._db.update_user(user_id, session_id=None)
+        except Exception:
+            return None
+
+    def get_reset_password_token(self, email: str) -> str:
+        """ generate a password reset token """
+        if email is None:
+            return None
+        try:
+            user = self._db.find_user_by(email=email)
+            reset_token = _generate_uuid()
+            self._db.update_user(user.id, reset_token=reset_token)
+            return reset_token
+        except Exception:
+            raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """update a users password"""
+        if reset_token is None or password is None:
+            return None
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            password = _hash_password(password).decode('utf-8')
+            self._db.update_user(user.id, reset_token=None,
+                                 hashed_password=password)
+        except Exception:
+            raise ValueError
